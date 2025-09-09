@@ -4,3 +4,5 @@
 *.o
 *.so
 *.dylib
+compile_commands.json
+*.cache/
