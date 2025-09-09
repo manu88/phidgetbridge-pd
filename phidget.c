@@ -33,9 +33,18 @@ static int phidget_configure(PhidgetObject *x) {
     printPhidgetReturnCodeError(ret, "PhidgetVoltageRatioInput_create");
     return 0;
   }
-  PhidgetVoltageRatioInput_setOnVoltageRatioChangeHandler(
+  ret = Phidget_setChannel((PhidgetHandle)x->voltageRatioInput0, 0);
+  if (ret != EPHIDGET_OK) {
+    printPhidgetReturnCodeError(ret, "Phidget_setChannel");
+    return 0;
+  }
+  ret = PhidgetVoltageRatioInput_setOnVoltageRatioChangeHandler(
       x->voltageRatioInput0, onVoltageRatioChange, x);
-
+  if (ret != EPHIDGET_OK) {
+    printPhidgetReturnCodeError(
+        ret, "PhidgetVoltageRatioInput_setOnVoltageRatioChangeHandler");
+    return 0;
+  }
   ret =
       Phidget_openWaitForAttachment((PhidgetHandle)x->voltageRatioInput0, 5000);
   if (ret != EPHIDGET_OK) {
