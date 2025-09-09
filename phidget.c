@@ -63,7 +63,7 @@ static int phidget_configure(PhidgetObject *x) {
   for (int i = 0; i < x->numInputs; i++) {
     post("configure input %i", i);
     if (!configureInput(x, &x->voltageRatioInputs[i])) {
-      return 0;
+      x->voltageRatioInputs[i] = NULL;
     }
   }
   return 1;
