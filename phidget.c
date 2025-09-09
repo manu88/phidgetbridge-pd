@@ -28,11 +28,9 @@ typedef struct {
 
 static void CCONV onVoltageRatioChange(PhidgetVoltageRatioInputHandle ch,
                                        void *ctx, double voltageRatio) {
-  post("onVoltageRatioChange %f", voltageRatio);
   PhidgetObject *x = (PhidgetObject *)ctx;
   for (int i = 0; i < x->numInputs; i++) {
     if (x->voltageRatioInputs[i] == ch) {
-      post("VoltageRatio on input %i: %lf", i, voltageRatio);
       outlet_float(x->outs[i], (float)voltageRatio);
       return;
     }
@@ -40,16 +38,16 @@ static void CCONV onVoltageRatioChange(PhidgetVoltageRatioInputHandle ch,
 }
 
 static int configureInput(PhidgetObject *x,
-                          PhidgetVoltageRatioInputHandle input) {
+                          PhidgetVoltageRatioInputHandle *input) {
   post("PhidgetVoltageRatioInput_create");
-  PhidgetReturnCode ret = PhidgetVoltageRatioInput_create(&input);
+  PhidgetReturnCode ret = PhidgetVoltageRatioInput_create(input);
   if (ret != EPHIDGET_OK) {
     printPhidgetReturnCodeError(ret, "PhidgetVoltageRatioInput_create");
     return 0;
   }
   post("PhidgetVoltageRatioInput_setOnVoltageRatioChangeHandler");
   PhidgetVoltageRatioInput_setOnVoltageRatioChangeHandler(
-      input, onVoltageRatioChange, x);
+      *input, onVoltageRatioChange, x);
 
   post("Phidget_openWaitForAttachment");
   ret = Phidget_openWaitForAttachment((PhidgetHandle)input, 5000);
@@ -64,7 +62,7 @@ static int phidget_configure(PhidgetObject *x) {
   post("phidget_configure for %i inputs", x->numInputs);
   for (int i = 0; i < x->numInputs; i++) {
     post("configure input %i", i);
-    if (!configureInput(x, x->voltageRatioInputs[i])) {
+    if (!configureInput(x, &x->voltageRatioInputs[i])) {
       return 0;
     }
   }
