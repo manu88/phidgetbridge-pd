@@ -2,6 +2,7 @@
 
 This project is a fork from https://github.com/pure-data/helloworld.
 
+for more examples of pure data external objects: https://github.com/pure-data/externals-howto/tree/master
 
 ## Usage
 

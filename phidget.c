@@ -28,6 +28,7 @@ typedef struct {
 
 static void CCONV onVoltageRatioChange(PhidgetVoltageRatioInputHandle ch,
                                        void *ctx, double voltageRatio) {
+  post("onVoltageRatioChange %f", voltageRatio);
   PhidgetObject *x = (PhidgetObject *)ctx;
   for (int i = 0; i < x->numInputs; i++) {
     if (x->voltageRatioInputs[i] == ch) {
