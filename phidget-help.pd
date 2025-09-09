@@ -1,6 +1,14 @@
 #N canvas 702 334 450 300 10;
-#X msg 13 37 bang;
-#X msg 156 30 config;
+#X msg 23 33 config;
+#X floatatom 19 151 5 0 0 0 - - - 0;
 #X obj 13 66 phidget 4;
+#X floatatom 66 161 5 0 0 0 - - - 0;
+#X floatatom 118 161 5 0 0 0 - - - 0;
+#X floatatom 176 161 5 0 0 0 - - - 0;
+#X obj 24 10 loadbang;
 #X connect 0 0 2 0;
-#X connect 1 0 2 0;
+#X connect 2 0 1 0;
+#X connect 2 1 3 0;
+#X connect 2 2 4 0;
+#X connect 2 3 5 0;
+#X connect 6 0 0 0;

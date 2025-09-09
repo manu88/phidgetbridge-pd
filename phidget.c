@@ -10,7 +10,7 @@ static void printPhidgetReturnCodeError(PhidgetReturnCode ret,
   const char *errorDescription = NULL;
   PhidgetReturnCode errCode =
       Phidget_getErrorDescription(ret, &errorDescription);
-  if (errCode == EPHIDGET_OK) {
+  if (errCode != EPHIDGET_OK) {
     post("%s: error %i %s", prefix, ret, errorDescription);
   }
 }
@@ -20,7 +20,7 @@ static t_class *PhidgetClass = NULL;
 #define MAX_INPUTS 4
 typedef struct {
   t_object x_obj;
-
+  t_outlet *outs[MAX_INPUTS];
   int numInputs;
 
   PhidgetVoltageRatioInputHandle voltageRatioInputs[MAX_INPUTS];
@@ -32,6 +32,8 @@ static void CCONV onVoltageRatioChange(PhidgetVoltageRatioInputHandle ch,
   for (int i = 0; i < x->numInputs; i++) {
     if (x->voltageRatioInputs[i] == ch) {
       post("VoltageRatio on input %i: %lf", i, voltageRatio);
+      outlet_float(x->outs[i], (float)voltageRatio);
+      return;
     }
   }
 }
@@ -94,6 +96,10 @@ void *phidget_new(t_symbol *s, int argc, t_atom *argv) {
   memset(x->voltageRatioInputs, 0,
          x->numInputs * sizeof(PhidgetVoltageRatioInputHandle));
   x->numInputs = numInputs;
+  for (int i = 0; i < x->numInputs; i++) {
+    x->outs[i] = outlet_new(&x->x_obj, &s_float);
+  }
+
   return (void *)x;
 }
 
@@ -112,6 +118,9 @@ void phidget_free(PhidgetObject *x) {
     if (ret != EPHIDGET_OK) {
       printPhidgetReturnCodeError(ret, "PhidgetVoltageRatioInput_delete");
     }
+  }
+  for (int i = 0; i < x->numInputs; i++) {
+    outlet_free(x->outs[i]);
   }
 }
 
