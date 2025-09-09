@@ -1,4 +1,4 @@
-# PhidgetBridget Pure Data object
+# PhidgetBridge Pure Data object
 
 This project is a fork from https://github.com/pure-data/helloworld.
 
