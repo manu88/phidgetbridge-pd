@@ -38,13 +38,16 @@ static void CCONV onVoltageRatioChange(PhidgetVoltageRatioInputHandle ch,
 }
 
 static int configureInput(PhidgetObject *x,
-                          PhidgetVoltageRatioInputHandle *input) {
+                          PhidgetVoltageRatioInputHandle *input, int channel) {
   post("PhidgetVoltageRatioInput_create");
   PhidgetReturnCode ret = PhidgetVoltageRatioInput_create(input);
   if (ret != EPHIDGET_OK) {
     printPhidgetReturnCodeError(ret, "PhidgetVoltageRatioInput_create");
     return 0;
   }
+  post("Phidget_setChannel");
+  Phidget_setChannel((PhidgetHandle)*input, channel);
+
   post("PhidgetVoltageRatioInput_setOnVoltageRatioChangeHandler");
   PhidgetVoltageRatioInput_setOnVoltageRatioChangeHandler(
       *input, onVoltageRatioChange, x);
@@ -62,7 +65,7 @@ static int phidget_configure(PhidgetObject *x) {
   post("phidget_configure for %i inputs", x->numInputs);
   for (int i = 0; i < x->numInputs; i++) {
     post("configure input %i", i);
-    if (!configureInput(x, &x->voltageRatioInputs[i])) {
+    if (!configureInput(x, &x->voltageRatioInputs[i], i)) {
       x->voltageRatioInputs[i] = NULL;
     }
   }
