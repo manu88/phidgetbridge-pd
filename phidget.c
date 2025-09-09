@@ -1,6 +1,7 @@
 #include "m_pd.h"
 #include <phidget22.h>
 #include <stddef.h>
+#include <string.h>
 
 static const char objectName[] = "phidget";
 
@@ -90,6 +91,8 @@ void *phidget_new(t_symbol *s, int argc, t_atom *argv) {
   if (x == NULL) {
     return NULL;
   }
+  memset(x->voltageRatioInputs, 0,
+         x->numInputs * sizeof(PhidgetVoltageRatioInputHandle));
   x->numInputs = numInputs;
   return (void *)x;
 }
@@ -97,6 +100,9 @@ void *phidget_new(t_symbol *s, int argc, t_atom *argv) {
 void phidget_free(PhidgetObject *x) {
   post("free phidget");
   for (int i = 0; i < x->numInputs; i++) {
+    if (x->voltageRatioInputs[i] == NULL) {
+      continue;
+    }
     PhidgetReturnCode ret =
         Phidget_close((PhidgetHandle)x->voltageRatioInputs[i]);
     if (ret != EPHIDGET_OK) {
