@@ -50,7 +50,7 @@ static int configureInput(PhidgetObject *x,
       *input, onVoltageRatioChange, x);
 
   post("Phidget_openWaitForAttachment");
-  ret = Phidget_openWaitForAttachment((PhidgetHandle)*input, 5000);
+  ret = Phidget_open((PhidgetHandle)*input);
   if (ret != EPHIDGET_OK) {
     printPhidgetReturnCodeError(ret, "Phidget_openWaitForAttachment");
     return 0;
