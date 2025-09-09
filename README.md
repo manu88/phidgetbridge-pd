@@ -30,6 +30,14 @@ See `make help` for more details.
 
 ### Phidget library
 
-get the development libraries here:
-* [macOS](https://www.phidgets.com/docs/OS_-_macOS)
-* [Linux](https://www.phidgets.com/docs/OS_-_Linux)
+#### macOs
+get the development libraries [here](https://www.phidgets.com/docs/OS_-_macOS)
+
+#### Linux
+More doc [here](https://www.phidgets.com/docs/OS_-_Linux).
+
+```bash
+curl -fsSL https://www.phidgets.com/downloads/setup_linux | sudo -E bash -
+sudo apt install -y libphidget22
+sudo apt install -y libphidget22-dev
+``` 
