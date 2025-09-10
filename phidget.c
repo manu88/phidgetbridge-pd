@@ -130,6 +130,20 @@ void phidget_free(PhidgetObject *x) {
   }
 }
 
+void phidget_start_msg(PhidgetObject *x, t_floatarg arg) {
+  int start = arg;
+  post("start %i", start);
+  for (int i = 0; i < x->numInputs; i++) {
+    post("start ch %i: %i", i, start);
+    PhidgetReturnCode ret = PhidgetVoltageRatioInput_setBridgeEnabled(
+        x->voltageRatioInputs[i], start);
+    if (ret != EPHIDGET_OK) {
+      printPhidgetReturnCodeError(ret,
+                                  "PhidgetVoltageRatioInput_setBridgeEnabled");
+    }
+  }
+}
+
 void phidget_setup(void) {
   PhidgetClass = class_new(gensym(objectName), (t_newmethod)phidget_new,
                            (t_method)phidget_free, sizeof(PhidgetObject),
@@ -137,4 +151,6 @@ void phidget_setup(void) {
   class_addbang(PhidgetClass, phidget_bang);
   class_addmethod(PhidgetClass, (t_method)phidget_config_msg, gensym("config"),
                   0);
+  class_addmethod(PhidgetClass, (t_method)phidget_start_msg, gensym("start"),
+                  A_FLOAT, 0);
 }
