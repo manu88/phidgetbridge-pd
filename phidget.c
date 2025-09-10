@@ -72,6 +72,27 @@ static int phidget_configure(PhidgetObject *x) {
   return 1;
 }
 
+void phidget_dump_msg(PhidgetObject *x) {
+  post("dump config");
+  for (int i = 0; i < x->numInputs; i++) {
+    PhidgetVoltageRatioInput_BridgeGain gain;
+    PhidgetReturnCode ret =
+        PhidgetVoltageRatioInput_getBridgeGain(x->voltageRatioInputs[i], &gain);
+    if (ret != EPHIDGET_OK) {
+      printPhidgetReturnCodeError(x, ret,
+                                  "PhidgetVoltageRatioInput_getBridgeGain");
+    }
+    int enabled = 0;
+    ret = PhidgetVoltageRatioInput_getBridgeEnabled(x->voltageRatioInputs[i],
+                                                    &enabled);
+    if (ret != EPHIDGET_OK) {
+      printPhidgetReturnCodeError(x, ret,
+                                  "PhidgetVoltageRatioInput_getBridgeEnabled");
+    }
+    post("chan %i: gain %i enabled %i", i, gain, enabled);
+  }
+}
+
 void phidget_config_msg(PhidgetObject *x) {
   post("configure Phidget");
   phidget_configure(x);
@@ -171,6 +192,7 @@ void phidget_setup(void) {
   class_addbang(PhidgetClass, phidget_bang);
   class_addmethod(PhidgetClass, (t_method)phidget_config_msg, gensym("config"),
                   0);
+  class_addmethod(PhidgetClass, (t_method)phidget_dump_msg, gensym("dump"), 0);
   class_addmethod(PhidgetClass, (t_method)phidget_start_msg, gensym("start"),
                   A_FLOAT, 0);
   class_addmethod(PhidgetClass, (t_method)phidget_gain_msg, gensym("gain"),
