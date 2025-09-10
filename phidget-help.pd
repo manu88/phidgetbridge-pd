@@ -1,13 +1,16 @@
-#N canvas 702 334 592 350 10;
+#N canvas 702 225 592 547 10;
 #X msg 23 33 config;
-#X floatatom 19 151 5 0 0 0 - - - 0;
-#X floatatom 66 161 5 0 0 0 - - - 0;
-#X floatatom 118 161 5 0 0 0 - - - 0;
-#X floatatom 176 161 5 0 0 0 - - - 0;
+#X floatatom 19 174 5 0 0 0 - - - 0;
+#X floatatom 66 184 5 0 0 0 - - - 0;
+#X floatatom 118 184 5 0 0 0 - - - 0;
+#X floatatom 176 184 5 0 0 0 - - - 0;
 #X obj 24 10 loadbang;
 #X msg 139 41 start \$1;
 #X obj 140 16 tgl 16 0 empty empty empty 0 -8 0 10 #fcfcfc #000000 #000000 0 1;
-#X obj 13 66 phidget 4;
+#X obj 22 105 phidget 4;
+#X text 196 18 started by default;
+#X text 288 62 set the gain on chan 0;
+#X msg 291 84 gain 0 8;
 #X connect 0 0 8 0;
 #X connect 5 0 0 0;
 #X connect 6 0 8 0;
@@ -16,3 +19,4 @@
 #X connect 8 1 2 0;
 #X connect 8 2 3 0;
 #X connect 8 3 4 0;
+#X connect 11 0 8 0;

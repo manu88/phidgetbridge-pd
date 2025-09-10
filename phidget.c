@@ -144,6 +144,25 @@ void phidget_start_msg(PhidgetObject *x, t_floatarg arg) {
   }
 }
 
+void phidget_gain_msg(PhidgetObject *x, t_floatarg arg0, t_floatarg arg1) {
+  int channel = arg0;
+  int gain = arg1;
+  post("set gain on chan %i: %i", channel, gain);
+  if (channel >= x->numInputs || channel < 0) {
+    pd_error(x, "invalid channel %i", channel);
+    return;
+  }
+  if (gain < BRIDGE_GAIN_1 || gain > BRIDGE_GAIN_128) {
+    pd_error(x, "invalid gain %i", gain);
+    return;
+  }
+  PhidgetReturnCode ret = PhidgetVoltageRatioInput_setBridgeGain(
+      x->voltageRatioInputs[channel], gain);
+  if (ret != EPHIDGET_OK) {
+    printPhidgetReturnCodeError(ret, "PhidgetVoltageRatioInput_setBridgeGain");
+  }
+}
+
 void phidget_setup(void) {
   PhidgetClass = class_new(gensym(objectName), (t_newmethod)phidget_new,
                            (t_method)phidget_free, sizeof(PhidgetObject),
@@ -153,4 +172,6 @@ void phidget_setup(void) {
                   0);
   class_addmethod(PhidgetClass, (t_method)phidget_start_msg, gensym("start"),
                   A_FLOAT, 0);
+  class_addmethod(PhidgetClass, (t_method)phidget_gain_msg, gensym("gain"),
+                  A_FLOAT, A_FLOAT, 0);
 }
