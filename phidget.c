@@ -3,18 +3,6 @@
 #include <stddef.h>
 #include <string.h>
 
-static const char objectName[] = "phidget";
-
-static void printPhidgetReturnCodeError(PhidgetReturnCode ret,
-                                        const char *prefix) {
-  const char *errorDescription = NULL;
-  PhidgetReturnCode errCode =
-      Phidget_getErrorDescription(ret, &errorDescription);
-  if (errCode != EPHIDGET_OK) {
-    post("%s: error %i %s", prefix, ret, errorDescription);
-  }
-}
-
 static t_class *PhidgetClass = NULL;
 
 #define MAX_INPUTS 4
@@ -25,6 +13,18 @@ typedef struct {
 
   PhidgetVoltageRatioInputHandle voltageRatioInputs[MAX_INPUTS];
 } PhidgetObject;
+
+static const char objectName[] = "phidget";
+
+static void printPhidgetReturnCodeError(PhidgetObject *x, PhidgetReturnCode ret,
+                                        const char *prefix) {
+  const char *errorDescription = NULL;
+  PhidgetReturnCode errCode =
+      Phidget_getErrorDescription(ret, &errorDescription);
+  if (errCode != EPHIDGET_OK) {
+    pd_error(x, "%s: error %i %s", prefix, ret, errorDescription);
+  }
+}
 
 static void CCONV onVoltageRatioChange(PhidgetVoltageRatioInputHandle ch,
                                        void *ctx, double voltageRatio) {
@@ -42,7 +42,7 @@ static int configureInput(PhidgetObject *x,
   post("PhidgetVoltageRatioInput_create");
   PhidgetReturnCode ret = PhidgetVoltageRatioInput_create(input);
   if (ret != EPHIDGET_OK) {
-    printPhidgetReturnCodeError(ret, "PhidgetVoltageRatioInput_create");
+    printPhidgetReturnCodeError(x, ret, "PhidgetVoltageRatioInput_create");
     return 0;
   }
   post("Phidget_setChannel");
@@ -52,10 +52,10 @@ static int configureInput(PhidgetObject *x,
   PhidgetVoltageRatioInput_setOnVoltageRatioChangeHandler(
       *input, onVoltageRatioChange, x);
 
-  post("Phidget_openWaitForAttachment");
+  post("Phidget_open");
   ret = Phidget_open((PhidgetHandle)*input);
   if (ret != EPHIDGET_OK) {
-    printPhidgetReturnCodeError(ret, "Phidget_openWaitForAttachment");
+    printPhidgetReturnCodeError(x, ret, "Phidget_open");
     return 0;
   }
   return 1;
@@ -118,11 +118,11 @@ void phidget_free(PhidgetObject *x) {
     PhidgetReturnCode ret =
         Phidget_close((PhidgetHandle)x->voltageRatioInputs[i]);
     if (ret != EPHIDGET_OK) {
-      printPhidgetReturnCodeError(ret, "Phidget_close");
+      printPhidgetReturnCodeError(x, ret, "Phidget_close");
     }
     ret = PhidgetVoltageRatioInput_delete(&x->voltageRatioInputs[i]);
     if (ret != EPHIDGET_OK) {
-      printPhidgetReturnCodeError(ret, "PhidgetVoltageRatioInput_delete");
+      printPhidgetReturnCodeError(x, ret, "PhidgetVoltageRatioInput_delete");
     }
   }
   for (int i = 0; i < x->numInputs; i++) {
@@ -138,7 +138,7 @@ void phidget_start_msg(PhidgetObject *x, t_floatarg arg) {
     PhidgetReturnCode ret = PhidgetVoltageRatioInput_setBridgeEnabled(
         x->voltageRatioInputs[i], start);
     if (ret != EPHIDGET_OK) {
-      printPhidgetReturnCodeError(ret,
+      printPhidgetReturnCodeError(x, ret,
                                   "PhidgetVoltageRatioInput_setBridgeEnabled");
     }
   }
@@ -159,7 +159,8 @@ void phidget_gain_msg(PhidgetObject *x, t_floatarg arg0, t_floatarg arg1) {
   PhidgetReturnCode ret = PhidgetVoltageRatioInput_setBridgeGain(
       x->voltageRatioInputs[channel], gain);
   if (ret != EPHIDGET_OK) {
-    printPhidgetReturnCodeError(ret, "PhidgetVoltageRatioInput_setBridgeGain");
+    printPhidgetReturnCodeError(x, ret,
+                                "PhidgetVoltageRatioInput_setBridgeGain");
   }
 }
 
