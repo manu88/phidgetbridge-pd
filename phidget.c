@@ -89,7 +89,15 @@ void phidget_dump_msg(PhidgetObject *x) {
       printPhidgetReturnCodeError(x, ret,
                                   "PhidgetVoltageRatioInput_getBridgeEnabled");
     }
-    post("chan %i: gain %i enabled %i", i, gain, enabled);
+    uint32_t dataInterval = 0;
+    ret = PhidgetVoltageRatioInput_getDataInterval(x->voltageRatioInputs[i],
+                                                   &dataInterval);
+    if (ret != EPHIDGET_OK) {
+      printPhidgetReturnCodeError(x, ret,
+                                  "PhidgetVoltageRatioInput_getDataInterval");
+    }
+    post("chan %i: gain %i enabled %i data interval %i", i, gain, enabled,
+         dataInterval);
   }
 }
 
