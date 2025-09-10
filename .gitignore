@@ -6,3 +6,4 @@
 *.dylib
 compile_commands.json
 *.cache/
+m_pd.h
