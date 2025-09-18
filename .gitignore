@@ -3,6 +3,7 @@
 *.dll
 *.o
 *.so
+*.d
 *.dylib
 compile_commands.json
 *.cache/
