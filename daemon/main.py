@@ -48,11 +48,12 @@ def main():
     ch3.openWaitForAttachment(100)
     ch3.setDataInterval(1000)
 
+    print("starting loop")
     try:
         while True:
             time.sleep(1)
-    except Exception as e:
-        print(e)
+    except:
+        pass
 
     print("Closing channels")
 
