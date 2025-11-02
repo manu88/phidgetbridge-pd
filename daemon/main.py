@@ -48,10 +48,13 @@ def main():
     ch3.openWaitForAttachment(100)
     ch3.setDataInterval(1000)
 
-    while True:
-        time.sleep(1)
+    try:
+        while True:
+            time.sleep(1)
+    except Exception as e:
+        print(e)
 
-    printf("Closing channels")
+    print("Closing channels")
 
     ch0.close()
     ch1.close()
