@@ -27,29 +27,31 @@ def main():
     ch0 = VoltageRatioInput()
     ch0.setChannel(0)
     ch0.setOnVoltageRatioChangeHandler(onVoltageRatioChange0)
-    ch0.openWaitForAttachment(1000)
+    ch0.openWaitForAttachment(100)
     ch0.setDataInterval(1000)
 
     ch1 = VoltageRatioInput()
     ch1.setChannel(1)
     ch1.setOnVoltageRatioChangeHandler(onVoltageRatioChange1)
-    ch1.openWaitForAttachment(1000)
+    ch1.openWaitForAttachment(100)
     ch1.setDataInterval(1000)
 
     ch2 = VoltageRatioInput()
     ch2.setChannel(2)
     ch2.setOnVoltageRatioChangeHandler(onVoltageRatioChange2)
-    ch2.openWaitForAttachment(1000)
+    ch2.openWaitForAttachment(100)
     ch2.setDataInterval(1000)
 
     ch3 = VoltageRatioInput()
     ch3.setChannel(3)
     ch3.setOnVoltageRatioChangeHandler(onVoltageRatioChange3)
-    ch3.openWaitForAttachment(1000)
+    ch3.openWaitForAttachment(100)
     ch3.setDataInterval(1000)
 
     while True:
         time.sleep(1)
+
+    printf("Closing channels")
 
     ch0.close()
     ch1.close()
