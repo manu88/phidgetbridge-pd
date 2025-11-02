@@ -13,12 +13,15 @@ def onVoltageRatioChange(self, voltageRatio):
 
 def main():
     ch = VoltageRatioInput()
+    ch.setChannel(0)
     ch.setOnVoltageRatioChangeHandler(onVoltageRatioChange)
-    ch.open()
+    ch.openWaitForAttachment(1000)
     while True:
         print("send")
         client.send_message("/filter", 10)
         time.sleep(1)
+
+    ch.close()
 
 
 if __name__ == "__main__":
