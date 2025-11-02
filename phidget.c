@@ -53,11 +53,13 @@ static int configureInput(PhidgetObject *x,
       *input, onVoltageRatioChange, x);
 
   post("Phidget_open");
-  ret = Phidget_open((PhidgetHandle)*input);
+  ret = Phidget_openWaitForAttachment((PhidgetHandle)*input,
+                                      PHIDGET_TIMEOUT_DEFAULT);
   if (ret != EPHIDGET_OK) {
     printPhidgetReturnCodeError(x, ret, "Phidget_open");
     return 0;
   }
+  PhidgetVoltageRatioInput_setDataInterval(*input, 1000);
   return 1;
 }
 
