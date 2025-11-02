@@ -8,19 +8,19 @@ client = udp_client.SimpleUDPClient("127.0.0.1", 4000)
 
 
 def onVoltageRatioChange0(self, voltageRatio):
-    client.send_message("/voltage", 0, voltageRatio)
+    client.send_message("/voltage", [0, voltageRatio])
 
 
 def onVoltageRatioChange1(self, voltageRatio):
-    client.send_message("/voltage", 1, voltageRatio)
+    client.send_message("/voltage", [1, voltageRatio])
 
 
 def onVoltageRatioChange2(self, voltageRatio):
-    client.send_message("/voltage", 2, voltageRatio)
+    client.send_message("/voltage", [2, voltageRatio])
 
 
 def onVoltageRatioChange3(self, voltageRatio):
-    client.send_message("/voltage", 3, voltageRatio)
+    client.send_message("/voltage", [3, voltageRatio])
 
 
 def main():
@@ -49,8 +49,6 @@ def main():
     ch3.setDataInterval(1000)
 
     while True:
-        print("send")
-        client.send_message("/filter", 10)
         time.sleep(1)
 
     ch0.close()
